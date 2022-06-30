@@ -8,6 +8,7 @@ import showChatroomController from "./controllers/chatrooms/showChatroomControll
 import rejectController from "./controllers/invitations/rejectController.js";
 import inviteController from "./controllers/invitations/inviteController.js";
 import acceptController from "./controllers/invitations/acceptController.js";
+import userController from "./controllers/users/userController.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.post("/createchatroom", authMiddleware, createChatroomController);
 app.post("/invitation/accept", authMiddleware, acceptController);
 app.delete("/invitation/reject", authMiddleware, rejectController);
 app.get("/chatrooms", authMiddleware, showChatroomController);
+app.get("/chatroom/:id/users", authMiddleware, userController);
 app.get("/chatroom/:id/participants", authMiddleware, participantController);
 
 app.listen(8000, () => {

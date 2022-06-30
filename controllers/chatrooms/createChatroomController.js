@@ -23,7 +23,7 @@ export default async (req, res) => {
           .json({ message: "You can not create more than three chatroom." });
       } else {
         await connection.query(
-          "INSERT INTO chatroom(admin_user_id,name) VALUES(?,?) ",
+          "INSERT INTO chatroom(admin_user_id,name) VALUES(?,?)",
           [admin_user_id, req.body.name]
         );
 
