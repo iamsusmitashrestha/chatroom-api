@@ -1,8 +1,7 @@
 import mysql from "promise-mysql";
 
 export default async (req, res) => {
-  const admin_user_id = req.payload.id;
-  const { username, chatroom_id, invited_to_user_id } = req.body;
+  const { username, chatroom_id } = req.body;
   let connection;
   try {
     connection = await mysql.createConnection({
@@ -21,14 +20,22 @@ export default async (req, res) => {
       if (result.length == 0) {
         throw "Username is not found.";
       } else {
-        await connection.query(
-          "INSERT INTO invitations(invited_by_user_id,invited_to_user_id,chatroom_id) VALUES(?,?,?) ",
-          [admin_user_id, invited_to_user_id, chatroom_id]
+        const results = await connection.query(
+          "SELECT * from invitations where username=?",
+          [username]
         );
+        if (results.length == 0) {
+          await connection.query(
+            "INSERT INTO invitations(username,chatroom_id) VALUES(?,?) ",
+            [username, chatroom_id]
+          );
 
-        res.json({
-          message: "Invitations sent.",
-        });
+          res.json({
+            message: "Invitations sent.",
+          });
+        } else {
+          res.json({ message: "The user is already invited." });
+        }
       }
     }
   } catch (error) {

@@ -1,7 +1,7 @@
 import mysql from "promise-mysql";
 
 export default async (req, res) => {
-  const chatroom_id = req.params.id;
+  const username = req.params.username;
   let connection;
   try {
     connection = await mysql.createConnection({
@@ -12,12 +12,12 @@ export default async (req, res) => {
     });
 
     const result = await connection.query(
-      "SELECT users.name,users.username,users.id FROM `users` INNER JOIN participants ON users.id != participants.user_id and participants.chatroom_id=5",
-      [chatroom_id]
+      "SELECT chatroom_id FROM invitations where username=?",
+      [username]
     );
 
     res.json({
-      users: result,
+      chatrooms: result,
     });
   } catch (error) {
     console.log(error);

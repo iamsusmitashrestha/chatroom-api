@@ -9,6 +9,7 @@ import rejectController from "./controllers/invitations/rejectController.js";
 import inviteController from "./controllers/invitations/inviteController.js";
 import acceptController from "./controllers/invitations/acceptController.js";
 import userController from "./controllers/users/userController.js";
+import getInvitationController from "./controllers/invitations/getInvitationController.js";
 
 const app = express();
 
@@ -23,6 +24,11 @@ app.delete("/invitation/reject", authMiddleware, rejectController);
 app.get("/chatrooms", authMiddleware, showChatroomController);
 app.get("/chatroom/:id/users", authMiddleware, userController);
 app.get("/chatroom/:id/participants", authMiddleware, participantController);
+app.get(
+  "/users/:username/invitations",
+  authMiddleware,
+  getInvitationController
+);
 
 app.listen(8000, () => {
   console.log("Server Listening");
