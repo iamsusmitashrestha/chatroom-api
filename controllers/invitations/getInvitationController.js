@@ -1,7 +1,7 @@
 import mysql from "promise-mysql";
 
 export default async (req, res) => {
-  const username = req.params.username;
+  const user_id = req.payload.id;
   let connection;
   try {
     connection = await mysql.createConnection({
@@ -12,8 +12,8 @@ export default async (req, res) => {
     });
 
     const result = await connection.query(
-      "SELECT chatroom_id FROM invitations where username=?",
-      [username]
+      "SELECT chatroom_id FROM invitations where user_id=?",
+      [user_id]
     );
 
     res.json({

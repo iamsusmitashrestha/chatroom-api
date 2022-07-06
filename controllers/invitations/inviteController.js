@@ -13,21 +13,21 @@ export default async (req, res) => {
     if (!username) {
       res.status(403).json({ message: "Username is required." });
     } else {
-      const result = await connection.query(
+      const [user] = await connection.query(
         "SELECT * from users where username=?",
         [username]
       );
-      if (result.length == 0) {
+      if (!user) {
         throw "Username is not found.";
       } else {
-        const results = await connection.query(
-          "SELECT * from invitations where username=?",
-          [username]
+        const [invitation] = await connection.query(
+          "SELECT * from invitations where user_id=? and chatroom_id=?",
+          [user.id, chatroom_id]
         );
-        if (results.length == 0) {
+        if (!invitation) {
           await connection.query(
-            "INSERT INTO invitations(username,chatroom_id) VALUES(?,?) ",
-            [username, chatroom_id]
+            "INSERT INTO invitations(user_id,chatroom_id) VALUES(?,?) ",
+            [user.id, chatroom_id]
           );
 
           res.json({

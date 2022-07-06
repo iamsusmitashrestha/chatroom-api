@@ -11,7 +11,7 @@ export default async (req, res) => {
       database: "chat",
     });
     await connection.query(
-      "DELETE from invitations WHERE invited_to_user_id=? and chatroom_id=?",
+      "DELETE from invitations WHERE user_id=? and chatroom_id=?",
       [user_id, req.body.chatroom_id]
     );
 

@@ -24,11 +24,7 @@ app.delete("/invitation/reject", authMiddleware, rejectController);
 app.get("/chatrooms", authMiddleware, showChatroomController);
 app.get("/chatroom/:id/users", authMiddleware, userController);
 app.get("/chatroom/:id/participants", authMiddleware, participantController);
-app.get(
-  "/users/:username/invitations",
-  authMiddleware,
-  getInvitationController
-);
+app.get("/invitations", authMiddleware, getInvitationController);
 
 app.listen(8000, () => {
   console.log("Server Listening");

@@ -1,10 +1,12 @@
-import mysql from "promise-mysql";
+import { createConnection } from "promise-mysql";
 
 export default async (req, res) => {
-  const user_id = req.payload.id;
+  const { id: user_id } = req.payload;
+  const { chatroom_id } = req.body;
+
   let connection;
   try {
-    connection = await mysql.createConnection({
+    connection = await createConnection({
       host: "localhost",
       user: "root",
       password: "",
@@ -12,13 +14,13 @@ export default async (req, res) => {
     });
 
     await connection.query(
-      "INSERT INTO participants(user_id,chatroom_id) VALUES(?,?) ",
-      [user_id, req.body.chatroom_id]
+      "INSERT INTO participants(user_id,chatroom_id) VALUES(?,?)",
+      [user_id, chatroom_id]
     );
 
     await connection.query(
-      "DELETE from invitations WHERE invited_to_user_id=? and chatroom_id=?",
-      [user_id, req.body.chatroom_id]
+      "DELETE from invitations WHERE user_id=? and chatroom_id=?",
+      [user_id, chatroom_id]
     );
 
     res.json({
