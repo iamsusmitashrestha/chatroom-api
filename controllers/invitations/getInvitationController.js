@@ -12,7 +12,7 @@ export default async (req, res) => {
     });
 
     const result = await connection.query(
-      "SELECT chatroom_id FROM invitations where user_id=?",
+      "SELECT invitations.chatroom_id,chatroom.name FROM invitations inner join chatroom on invitations.chatroom_id=chatroom.id  where user_id=?",
       [user_id]
     );
 

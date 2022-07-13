@@ -1,4 +1,6 @@
 import express from "express";
+import jwt from "jwt-then";
+import socketIo from "socket.io";
 import authMiddleware from "./middlewares/auth.js";
 import registerController from "./controllers/users/registerController.js";
 import loginController from "./controllers/users/loginController.js";
@@ -26,6 +28,27 @@ app.get("/chatroom/:id/users", authMiddleware, userController);
 app.get("/chatroom/:id/participants", authMiddleware, participantController);
 app.get("/invitations", authMiddleware, getInvitationController);
 
-app.listen(8000, () => {
+const server = app.listen(8000, () => {
   console.log("Server Listening");
+});
+
+const io = socketIo(server);
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.query.token;
+
+  try {
+    const payload = await jwt.verify(token, "tero tauko");
+    socket.userId = payload.id;
+    next();
+  } catch (error) {
+    //
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log("Connected:" + socket.userId);
+  socket.on("disconnect", () => {
+    console.log("Connected:" + socket.userId);
+  });
 });
